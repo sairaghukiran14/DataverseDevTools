@@ -1,0 +1,2638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dataverse DevTools — User Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════
+   EXACT PALETTE FROM EXTENSION SCREENSHOTS
+   ═══════════════════════════════════════════
+   --purple-dark   #7b2876  (primary btn left)
+   --purple        #b83895  (primary btn right / gradient)
+   --purple-light  #f4eef8  (chip backgrounds)
+   --pink          #c3669d  (FetchXML btn, accents)
+   --pink-light    #fce8f6  (hover states)
+   --page-bg       #f4f4fc  (outer page background)
+   --card-bg       #ffffff  (cards)
+   --surface       #f0f3fa  (inputs, search bars)
+   --tag-logical   #d4dae5  (LOGICAL tag bg)
+   --tag-schema    #e8ecf6  (SCHEMA tag bg)
+   --tag-set       #dde1ea  (SET tag bg)
+   --maker-btn     #c07848  (peach Maker button)
+   --maker-bg      #fdf5ee  (Maker btn bg tint)
+   --green-string  #f0f4f8  (string type — near white)
+   --green-lookup  #9ccfb2  (lookup type — teal-green)
+   --green-bool    #c2ded0  (boolean type)
+   --green-opt     #97c3a5  (optionset)
+   --green-int     #8dc5a4  (integer)
+   --required-red  #c5565d  (REQUIRED badge text)
+   --required-bg   #ffd0cf  (REQUIRED badge bg)
+   --warn-bg       #fdf8c6  (warning box)
+   --warn-border   #e8d88a
+   --contains-grn  #2a7a4a  (CONTAINS THIS ENTITY label)
+   --text-main     #1a1028  (dark text)
+   --text-muted    #616570  (secondary text)
+   --text-dim      #9aa3bb  (tertiary)
+   --border        #e2e6f0  (card borders)
+   --sidebar-bg    #1e1630  (sidebar — deep purple-navy)
+═══════════════════════════════════════════ */
+    :root {
+      --purple-dark: #7b2876;
+      --purple: #b83895;
+      --purple-mid: #903082;
+      --purple-light: #f4eef8;
+      --purple-chip: #e8dff0;
+      --pink: #c3669d;
+      --pink-light: #fce8f6;
+      --page-bg: #f4f4fc;
+      --card-bg: #ffffff;
+      --surface: #f0f3fa;
+      --surface2: #f8f9fd;
+      --tag-logical: #d4dae5;
+      --tag-schema: #e8ecf6;
+      --tag-set: #dde1ea;
+      --maker: #c07848;
+      --maker-bg: #fdf5ee;
+      --maker-border: #e8c8a8;
+      --green-lookup: #9ccfb2;
+      --green-bool: #c2ded0;
+      --green-opt: #97c3a5;
+      --green-int: #8dc5a4;
+      --green-dec: #b1dfc0;
+      --green-money: #99c2a4;
+      --green-memo: #c3e0d5;
+      --req-red: #c5565d;
+      --req-bg: #ffe0e0;
+      --req-border: #f0b0b4;
+      --warn-bg: #fdf8e0;
+      --warn-border: #e8d070;
+      --contains-grn: #2a7a4a;
+      --text-main: #1a1028;
+      --text-body: #3d3550;
+      --text-muted: #666278;
+      --text-dim: #9a96a8;
+      --border: #e2e0ec;
+      --border2: #cccae0;
+      --sidebar-bg: #1e1630;
+      --sidebar-hover: #2c2244;
+      --sidebar-active: #38294e;
+      --nav-w: 258px;
+      --radius: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 3px rgba(120, 40, 118, 0.06), 0 4px 12px rgba(120, 40, 118, 0.06);
+      --shadow: 0 2px 8px rgba(120, 40, 118, 0.08), 0 8px 24px rgba(120, 40, 118, 0.08);
+      --shadow-lg: 0 4px 16px rgba(120, 40, 118, 0.10), 0 20px 48px rgba(120, 40, 118, 0.12);
+      --sans: 'Geist', system-ui, sans-serif;
+      --mono: 'Geist Mono', 'Courier New', monospace;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--page-bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    /* ════════════════════════════════
+   SHELL
+════════════════════════════════ */
+    .shell {
+      display: grid;
+      grid-template-columns: var(--nav-w) 1fr;
+      min-height: 100vh;
+    }
+
+    /* ════════════════════════════════
+   SIDEBAR
+════════════════════════════════ */
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      background: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 24px;
+      z-index: 200;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
+    .sb-top {
+      padding: 22px 18px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      margin-bottom: 12px;
+    }
+
+    .sb-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .sb-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+    }
+
+    .sb-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.25;
+    }
+
+    .sb-name small {
+      display: block;
+      font-size: 10px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.35);
+      font-family: var(--mono);
+      margin-top: 1px;
+      letter-spacing: 0.04em;
+    }
+
+    .sb-cws {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+      border-radius: 7px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.12s;
+      box-shadow: 0 3px 12px rgba(184, 56, 149, 0.35);
+    }
+
+    .sb-cws:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .sb-cws .cws-icon {
+      font-size: 14px;
+    }
+
+    .sb-cws-info {
+      line-height: 1.3;
+    }
+
+    .sb-cws-info strong {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .sb-cws-info small {
+      font-size: 9.5px;
+      color: rgba(255, 255, 255, 0.5);
+      font-family: var(--mono);
+    }
+
+    .sb-section {
+      padding: 12px 18px 4px;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.22);
+    }
+
+    .sb-link {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 10px;
+      margin: 1px 8px;
+      border-radius: 7px;
+      font-size: 12.5px;
+      color: rgba(255, 255, 255, 0.45);
+      transition: background 0.13s, color 0.13s;
+    }
+
+    .sb-link:hover {
+      background: var(--sidebar-hover);
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .sb-link.active {
+      background: var(--sidebar-active);
+      color: #fff;
+    }
+
+    .sb-link .ico {
+      font-size: 13px;
+      width: 18px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .sb-link .num {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.18);
+      margin-left: auto;
+    }
+
+    .sb-footer {
+      margin-top: auto;
+      padding: 16px 18px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .sb-author {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .sb-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--purple-dark), var(--pink));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .sb-author-info strong {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .sb-author-info a {
+      font-size: 9.5px;
+      color: rgba(255, 255, 255, 0.3);
+      font-family: var(--mono);
+      transition: color 0.15s;
+    }
+
+    .sb-author-info a:hover {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .nav-btn {
+      display: none;
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 600;
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: var(--sidebar-bg);
+      border: none;
+      cursor: pointer;
+      flex-direction: column;
+      gap: 4px;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .nav-btn span {
+      display: block;
+      width: 16px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 199;
+      background: rgba(30, 22, 48, 0.5);
+    }
+
+    /* ════════════════════════════════
+   MAIN
+════════════════════════════════ */
+    .main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ════════════════════════════════
+   HERO
+════════════════════════════════ */
+    .hero {
+      background: linear-gradient(135deg, #1e1630 0%, #2e1848 50%, #3a1858 100%);
+      padding: clamp(48px, 7vw, 80px) clamp(24px, 5vw, 60px) clamp(36px, 5vw, 56px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      right: -60px;
+      bottom: -60px;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(184, 56, 149, 0.18) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      left: -40px;
+      top: -40px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(123, 40, 118, 0.14) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--pink-light);
+      opacity: 0.7;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      width: 18px;
+      height: 1px;
+      background: currentColor;
+    }
+
+    .hero h1 {
+      font-size: clamp(28px, 5.5vw, 50px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 .grad {
+      background: linear-gradient(90deg, #e890c8, #f0b0d8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: clamp(13px, 1.5vw, 15px);
+      color: rgba(255, 255, 255, 0.55);
+      line-height: 1.8;
+      max-width: 460px;
+      font-weight: 300;
+      margin-bottom: 24px;
+    }
+
+    .hero-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .hpill {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      letter-spacing: 0.07em;
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .hpill.hi {
+      border-color: rgba(195, 102, 157, 0.5);
+      color: #e890c8;
+    }
+
+    .hero-cws {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+      color: #fff;
+      border-radius: 8px;
+      padding: 11px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(184, 56, 149, 0.4);
+      transition: opacity 0.15s, transform 0.12s;
+    }
+
+    .hero-cws:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .hero-author {
+      margin-top: 22px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ha-av {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--purple-dark), var(--pink));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .ha-info {
+      font-size: 12px;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .ha-info strong {
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 600;
+    }
+
+    .ha-info a {
+      color: rgba(195, 102, 157, 0.65);
+      font-family: var(--mono);
+      font-size: 10.5px;
+      transition: color 0.15s;
+    }
+
+    .ha-info a:hover {
+      color: #e890c8;
+    }
+
+    /* ════════════════════════════════
+   CONTENT
+════════════════════════════════ */
+    .content {
+      padding: clamp(28px, 4vw, 52px) clamp(24px, 5vw, 60px) 60px;
+      flex: 1;
+    }
+
+    .doc-sec {
+      margin-bottom: clamp(40px, 6vw, 60px);
+      padding-bottom: clamp(40px, 6vw, 60px);
+      border-bottom: 1px solid var(--border);
+      animation: up 0.4s ease both;
+    }
+
+    .doc-sec:last-of-type {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    @keyframes up {
+      from {
+        opacity: 0;
+        transform: translateY(14px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* Section header */
+    .sec-hd {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .sec-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      margin-top: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .si-purple {
+      background: var(--purple-light);
+    }
+
+    .si-pink {
+      background: var(--pink-light);
+    }
+
+    .si-maker {
+      background: var(--maker-bg);
+    }
+
+    .si-green {
+      background: #e8f5ee;
+    }
+
+    .si-warn {
+      background: var(--warn-bg);
+    }
+
+    .sec-ht .chip {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--purple-mid);
+      background: var(--purple-chip);
+      border: 1px solid #d8c8e8;
+      padding: 2px 7px;
+      border-radius: 3px;
+      margin-bottom: 5px;
+    }
+
+    .sec-ht h2 {
+      font-size: clamp(17px, 2.2vw, 21px);
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.015em;
+      line-height: 1.2;
+    }
+
+    /* ════════════════════════════════
+   EXTENSION CHROME REPLICA
+════════════════════════════════ */
+    /* The popup header bar — exact replica */
+    .ext-chrome {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      margin: 18px 0;
+    }
+
+    /* Top bar */
+    .ext-topbar {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+    }
+
+    .ext-topbar .ext-logo-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      flex-shrink: 0;
+    }
+
+    .ext-topbar .ext-title {
+      font-weight: 700;
+      color: var(--text-main);
+      font-size: 13px;
+    }
+
+    .ext-topbar .ext-devtools-pill {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 500;
+      background: var(--purple-light);
+      color: var(--purple-mid);
+      border: 1px solid #d8c8e8;
+      padding: 1px 7px;
+      border-radius: 20px;
+    }
+
+    .ext-topbar .ext-org {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-left: 4px;
+    }
+
+    .ext-topbar .ext-expand {
+      margin-left: auto;
+      color: var(--text-dim);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* Action buttons row */
+    .ext-actions {
+      display: flex;
+      gap: 0;
+      padding: 10px 12px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      gap: 8px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 100%);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: opacity 0.15s;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.88;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--pink-light);
+      color: var(--pink);
+      border: 1px solid #eabbe0;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: background 0.15s;
+    }
+
+    .btn-secondary:hover {
+      background: #f8d8f0;
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--surface);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: background 0.15s;
+    }
+
+    .btn-ghost:hover {
+      background: var(--surface2);
+    }
+
+    /* Search bar replica */
+    .ext-search {
+      padding: 8px 12px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .search-inner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 7px 12px;
+    }
+
+    .search-inner .s-icon {
+      color: var(--text-dim);
+      font-size: 12px;
+    }
+
+    .search-inner input,
+    .search-inner .s-placeholder {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-family: var(--sans);
+      font-size: 12.5px;
+      color: var(--text-dim);
+      outline: none;
+    }
+
+    .search-inner .s-count {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      background: var(--tag-logical);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    /* Breadcrumb */
+    .ext-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+
+    .ext-breadcrumb .bc-back {
+      color: var(--purple-mid);
+      font-size: 11px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .ext-breadcrumb .bc-sep {
+      color: var(--text-dim);
+    }
+
+    .ext-breadcrumb .bc-current {
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .ext-breadcrumb .bc-filters {
+      margin-left: auto;
+      display: flex;
+      gap: 6px;
+    }
+
+    .filter-select {
+      font-family: var(--sans);
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 3px 8px;
+      cursor: pointer;
+    }
+
+    /* Table rows */
+    .ext-rows {
+      background: #fff;
+    }
+
+    .ext-row {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.12s;
+    }
+
+    .ext-row:hover {
+      background: var(--surface2);
+    }
+
+    .ext-row:last-child {
+      border-bottom: none;
+    }
+
+    .row-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .row-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .row-type-badge {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      color: var(--text-muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .row-type-badge.required {
+      background: var(--req-bg);
+      color: var(--req-red);
+      border-color: var(--req-border);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+    }
+
+    .row-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--mono);
+      font-size: 9.5px;
+      border-radius: 5px;
+      padding: 3px 8px;
+      cursor: pointer;
+      transition: filter 0.12s;
+    }
+
+    .tag:hover {
+      filter: brightness(0.95);
+    }
+
+    .tag-logical {
+      background: var(--tag-logical);
+      color: #5a6278;
+    }
+
+    .tag-schema {
+      background: var(--tag-schema);
+      color: #4a5488;
+    }
+
+    .tag-set {
+      background: var(--tag-set);
+      color: #5a6070;
+    }
+
+    .tag .tag-label {
+      font-size: 8px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-right: 1px;
+    }
+
+    .tag .copy-icon {
+      color: var(--text-dim);
+      font-size: 9px;
+      margin-left: 3px;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: var(--sans);
+      border: 1px solid;
+      transition: filter 0.12s;
+    }
+
+    .action-btn:hover {
+      filter: brightness(0.95);
+    }
+
+    .ab-fields {
+      background: var(--purple-light);
+      color: var(--purple-mid);
+      border-color: #d8c8e8;
+    }
+
+    .ab-webapi {
+      background: var(--surface);
+      color: var(--text-muted);
+      border-color: var(--border);
+    }
+
+    .ab-maker {
+      background: var(--maker-bg);
+      color: var(--maker);
+      border-color: var(--maker-border);
+    }
+
+    .ab-openmaker {
+      background: var(--maker-bg);
+      color: var(--maker);
+      border-color: var(--maker-border);
+    }
+
+    /* ════════════════════════════════
+   FIELD INSPECTOR ROWS
+════════════════════════════════ */
+    .inspector-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .inspector-table th {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border2);
+      padding: 7px 12px;
+      text-align: left;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .inspector-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .inspector-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .inspector-table tr:hover td {
+      background: var(--surface2);
+    }
+
+    .inspector-table .col-name {
+      font-weight: 500;
+      color: var(--text-main);
+      font-size: 11.5px;
+    }
+
+    .type-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    .t-string {
+      background: #eee8f8;
+      color: #7030a0;
+    }
+
+    .t-boolean {
+      background: var(--green-bool);
+      color: #2a6050;
+    }
+
+    .t-lookup {
+      background: var(--green-lookup);
+      color: #1a5040;
+    }
+
+    .t-optionset {
+      background: var(--green-opt);
+      color: #1a5038;
+    }
+
+    .t-integer {
+      background: var(--green-int);
+      color: #1a4838;
+    }
+
+    .t-decimal {
+      background: var(--green-dec);
+      color: #1a5038;
+    }
+
+    .t-money {
+      background: var(--green-money);
+      color: #1a4830;
+    }
+
+    .t-memo {
+      background: var(--green-memo);
+      color: #1a5040;
+    }
+
+    .t-uid {
+      background: var(--tag-schema);
+      color: #4a5488;
+    }
+
+    .req-star {
+      color: var(--req-red);
+      font-weight: 700;
+    }
+
+    /* ════════════════════════════════
+   WEB API SIDEBAR REPLICA
+════════════════════════════════ */
+    .webapi-shell {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      margin: 18px 0;
+    }
+
+    .webapi-header {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .webapi-header .wh-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .webapi-header .wh-org {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    .entity-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--purple-light);
+      border: 1px solid #d8c8e8;
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--purple-mid);
+    }
+
+    .entity-chip .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--purple-mid);
+    }
+
+    .guid-chip {
+      display: inline-flex;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--text-dim);
+    }
+
+    .webapi-chips {
+      padding: 8px 14px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Tabs */
+    .webapi-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .wtab {
+      padding: 9px 14px;
+      font-size: 12px;
+      color: var(--text-dim);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .wtab:hover {
+      color: var(--purple-mid);
+    }
+
+    .wtab.active {
+      color: var(--purple-dark);
+      border-bottom-color: var(--purple-dark);
+      font-weight: 600;
+    }
+
+    /* URL bar */
+    .webapi-urlbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .method-select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 5px 10px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--text-main);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .url-input {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 5px 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .btn-send {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--sans);
+    }
+
+    /* OData builder fields */
+    .odata-body {
+      background: var(--surface2);
+      padding: 12px 14px;
+    }
+
+    .odata-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .odata-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .odata-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--purple-mid);
+      font-weight: 500;
+      min-width: 64px;
+      padding-top: 6px;
+    }
+
+    .odata-input {
+      flex: 1;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .odata-tags {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .op-tag {
+      background: var(--tag-schema);
+      color: #4a5488;
+      border: 1px solid #d0d8f0;
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-family: var(--mono);
+      font-size: 10px;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .op-tag:hover {
+      background: #dde3f8;
+    }
+
+    /* ════════════════════════════════
+   MAKER PORTAL MODAL REPLICA
+════════════════════════════════ */
+    .maker-modal-wrap {
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      margin: 18px 0;
+      background: #fff;
+    }
+
+    .modal-overlay-bg {
+      background: var(--surface);
+      padding: 14px;
+      position: relative;
+    }
+
+    .modal-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      max-width: 340px;
+      margin: 0 auto;
+      box-shadow: 0 8px 32px rgba(30, 22, 48, 0.12);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-header h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .modal-close {
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .modal-warn {
+      margin: 12px 14px;
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-border);
+      border-radius: 7px;
+      padding: 10px 12px;
+      font-size: 11.5px;
+    }
+
+    .modal-warn .warn-title {
+      font-weight: 600;
+      color: #8a6a00;
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .modal-warn .warn-body {
+      color: #6a5200;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .modal-warn code {
+      font-family: var(--mono);
+      font-size: 10px;
+      background: rgba(0, 0, 0, 0.06);
+      padding: 0 4px;
+      border-radius: 3px;
+    }
+
+    .modal-env-input {
+      margin: 0 14px 12px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .modal-env-input input {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 12px;
+      color: var(--text-dim);
+      font-family: var(--sans);
+    }
+
+    .btn-save {
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--sans);
+    }
+
+    .modal-sol-label {
+      padding: 6px 14px 4px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .modal-sol-label span {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .contains-label {
+      padding: 4px 14px 8px;
+      font-family: var(--mono);
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--contains-grn);
+    }
+
+    .sol-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-top: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .sol-row:hover {
+      background: var(--surface2);
+    }
+
+    .sol-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .sol-meta {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-top: 1px;
+    }
+
+    .sol-link {
+      color: var(--purple-mid);
+      font-size: 12px;
+    }
+
+    /* ════════════════════════════════
+   STEPS
+════════════════════════════════ */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .step {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex;
+      gap: 13px;
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+
+    .step:hover {
+      box-shadow: var(--shadow-sm);
+      border-color: #d0c0e0;
+    }
+
+    .step-n {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .step-body strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+
+    .step-body p {
+      font-size: 12.5px;
+      color: var(--text-body);
+    }
+
+    /* ════════════════════════════════
+   FEATURE ROWS
+════════════════════════════════ */
+    .feats {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 16px 0;
+    }
+
+    .feat {
+      display: grid;
+      grid-template-columns: 8px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 13px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .feat:last-child {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .fdot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+      margin-top: 7px;
+      flex-shrink: 0;
+    }
+
+    .ftitle {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+
+    .fdesc {
+      font-size: 12.5px;
+      color: var(--text-body);
+      line-height: 1.65;
+    }
+
+    .fdesc strong {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--purple-light);
+      color: var(--purple-mid);
+      padding: 1px 6px;
+      border-radius: 3px;
+      border: 1px solid #d8c8e8;
+    }
+
+    /* Requirement pill row */
+    .pill-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 14px 0;
+    }
+
+    .rp {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 12px;
+      border-radius: 20px;
+    }
+
+    .rp-req {
+      background: var(--req-bg);
+      color: var(--req-red);
+      border: 1px solid var(--req-border);
+    }
+
+    .rp-rec {
+      background: var(--warn-bg);
+      color: #8a6a00;
+      border: 1px solid var(--warn-border);
+    }
+
+    .rp-opt {
+      background: #e8f5ee;
+      color: var(--contains-grn);
+      border: 1px solid #a8d8b8;
+    }
+
+    /* ════════════════════════════════
+   PRO TIPS
+════════════════════════════════ */
+    .tips {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .tip {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-border);
+      border-left: 3px solid #c8a800;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 13px 16px;
+      display: flex;
+      gap: 11px;
+    }
+
+    .tip-ico {
+      font-size: 16px;
+      flex-shrink: 0;
+      line-height: 1.5;
+    }
+
+    .tip-lbl {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #8a6a00;
+      margin-bottom: 3px;
+    }
+
+    .tip-txt {
+      font-size: 12.5px;
+      color: #5a4800;
+      line-height: 1.7;
+    }
+
+    /* ════════════════════════════════
+   PRIVACY
+════════════════════════════════ */
+    .priv-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .priv-card {
+      background: var(--card-bg);
+      border: 1px solid #b8d8c8;
+      border-top: 3px solid var(--contains-grn);
+      border-radius: var(--radius);
+      padding: 16px 15px;
+      transition: box-shadow 0.15s;
+    }
+
+    .priv-card:hover {
+      box-shadow: var(--shadow-sm);
+    }
+
+    .priv-chk {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--contains-grn);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 9px;
+    }
+
+    .priv-card p {
+      font-size: 12.5px;
+      color: var(--text-body);
+      line-height: 1.6;
+    }
+
+    .priv-card strong {
+      color: var(--text-main);
+    }
+
+    /* ════════════════════════════════
+   FOOTER
+════════════════════════════════ */
+    .footer {
+      background: var(--sidebar-bg);
+      padding: clamp(24px, 4vw, 40px) clamp(24px, 5vw, 60px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+
+    .footer-brand {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .footer-brand span {
+      background: linear-gradient(90deg, #e890c8, #f0b0d8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .footer-sub {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.3);
+      font-family: var(--mono);
+    }
+
+    .footer-sub a {
+      color: rgba(195, 102, 157, 0.65);
+      transition: color 0.15s;
+    }
+
+    .footer-sub a:hover {
+      color: #e890c8;
+    }
+
+    .footer-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .footer-cws {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+      color: #fff;
+      border-radius: 7px;
+      padding: 9px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 3px 14px rgba(184, 56, 149, 0.4);
+      transition: opacity 0.15s, transform 0.12s;
+    }
+
+    .footer-cws:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .footer-note {
+      font-size: 10.5px;
+      color: rgba(255, 255, 255, 0.25);
+      font-family: var(--mono);
+    }
+
+    /* ════════════════════════════════
+   RESPONSIVE
+════════════════════════════════ */
+    @media (max-width: 960px) {
+      :root {
+        --nav-w: 210px;
+      }
+
+      .priv-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        height: 100vh;
+        width: 270px;
+        z-index: 500;
+        transform: translateX(-100%);
+        transition: transform 0.27s cubic-bezier(.4, 0, .2, 1);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 32px rgba(30, 22, 48, 0.25);
+      }
+
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 499;
+        background: rgba(30, 22, 48, 0.45);
+      }
+
+      .sidebar.open+.overlay {
+        display: block;
+      }
+
+      .nav-btn {
+        display: flex;
+      }
+
+      .hero {
+        padding: 58px 18px 32px;
+      }
+
+      .content {
+        padding: 24px 18px 48px;
+      }
+
+      .priv-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ext-actions {
+        flex-wrap: wrap;
+      }
+
+      .footer {
+        padding: 28px 18px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .footer-right {
+        align-items: flex-start;
+      }
+
+      .odata-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .odata-label {
+        padding-top: 0;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .hero h1 {
+        font-size: 24px;
+      }
+
+      .sec-ht h2 {
+        font-size: 16px;
+      }
+
+      .row-tags {
+        gap: 4px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <button class="nav-btn" id="navBtn" aria-label="Open navigation">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="shell">
+
+    <!-- ══════════ SIDEBAR ══════════ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sb-top">
+        <div class="sb-logo">
+          <div class="sb-icon">⚡</div>
+          <div class="sb-name">Dataverse DevTools <small>Chrome Extension</small></div>
+        </div>
+        <a href="https://chromewebstore.google.com/detail/dataverse-devtools/fjicdfidibeallngfadanabejjhnodoj"
+          target="_blank" class="sb-cws">
+          <span class="cws-icon">🌐</span>
+          <div class="sb-cws-info"><strong>Chrome Web Store</strong><small>Install Free →</small></div>
+        </a>
+      </div>
+
+      <div class="sb-section">Getting Started</div>
+      <a href="#install" class="sb-link"><span class="ico">📥</span>Installation<span class="num">01</span></a>
+      <div class="sb-section">Features</div>
+      <a href="#metadata" class="sb-link"><span class="ico">🗂</span>Metadata Browser<span class="num">02</span></a>
+      <a href="#fields" class="sb-link"><span class="ico">🔍</span>Field Inspector<span class="num">03</span></a>
+      <a href="#maker" class="sb-link"><span class="ico">🔗</span>Maker Portal<span class="num">04</span></a>
+      <a href="#webapi" class="sb-link"><span class="ico">⚡</span>Web API Sidebar<span class="num">05</span></a>
+      <a href="#utils" class="sb-link"><span class="ico">🛠</span>Dev Utils<span class="num">06</span></a>
+      <div class="sb-section">Reference</div>
+      <a href="#tips" class="sb-link"><span class="ico">💡</span>Pro Tips<span class="num">07</span></a>
+      <a href="#privacy" class="sb-link"><span class="ico">🔒</span>Privacy<span class="num">08</span></a>
+
+      <div class="sb-footer">
+        <div class="sb-author">
+          <div class="sb-avatar">N</div>
+          <div class="sb-author-info">
+            <strong>Neha Sahu</strong>
+            <a href="mailto:nehasahu2227@gmail.com">nehasahu2227@gmail.com</a>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- ══════════ MAIN ══════════ -->
+    <main class="main">
+
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-inner">
+          <div class="hero-eyebrow">Chrome Extension · User Guide</div>
+          <h1>Dataverse <span class="grad">DevTools</span></h1>
+          <p class="hero-desc">A lightweight, powerful browser extension to supercharge your workflow in Microsoft
+            Dataverse, Dynamics 365 and Power Apps. Metadata, field inspection, Web API queries — right in your browser.
+          </p>
+          <div class="hero-pills">
+            <span class="hpill hi">v1.0.0 · March 2026</span>
+            <span class="hpill">Chrome · Brave</span>
+            <span class="hpill">Dynamics 365</span>
+          </div>
+          <a href="https://chromewebstore.google.com/detail/dataverse-devtools/fjicdfidibeallngfadanabejjhnodoj"
+            target="_blank" class="hero-cws">
+            ⬇ Add to Chrome — Free
+          </a>
+          <div class="hero-author">
+            <div class="ha-av">N</div>
+            <div class="ha-info">Built by <strong>Neha Sahu</strong><br><a
+                href="mailto:nehasahu2227@gmail.com">nehasahu2227@gmail.com</a></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+
+        <!-- 01 INSTALLATION -->
+        <section class="doc-sec" id="install">
+          <div class="sec-hd">
+            <div class="sec-icon si-purple">📥</div>
+            <div class="sec-ht"><span class="chip">01 · Setup</span>
+              <h2>Installation &amp; Setup</h2>
+            </div>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-n">1</div>
+              <div class="step-body"><strong>Install the Extension</strong>
+                <p>Load into Chrome or Brave from the Chrome Web Store.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-n">2</div>
+              <div class="step-body"><strong>Navigate to Dataverse</strong>
+                <p>Open any Dynamics 365 Model-Driven App or Power Apps page.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-n">3</div>
+              <div class="step-body"><strong>Launch DevTools</strong>
+                <p>Click the extension icon in your toolbar — popup opens instantly.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 02 METADATA BROWSER -->
+        <section class="doc-sec" id="metadata">
+          <div class="sec-hd">
+            <div class="sec-icon si-purple">🗂️</div>
+            <div class="sec-ht"><span class="chip">02 · Feature</span>
+              <h2>Metadata &amp; Table Browser</h2>
+            </div>
+          </div>
+          <div class="feats">
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">Search Everywhere</div>
+                <div class="fdesc">Search by <strong>Display Name</strong>, <strong>Logical Name</strong> or
+                  <strong>Schema Name</strong> across all 1000+ tables instantly.
+                </div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">One-Click Copy</div>
+                <div class="fdesc">Hover any name chip and hit the copy icon — logical name, schema name or entity set
+                  name goes straight to clipboard.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- LIVE UI COMPONENT: Metadata Browser -->
+          <div class="ext-chrome">
+            <div class="ext-topbar">
+              <div class="ext-logo-icon">⚡</div>
+              <span class="ext-title">Dataverse</span>
+              <span class="ext-devtools-pill">DEVTOOLS</span>
+              <span class="ext-org">myorg.crm.dynamics.com</span>
+              <span class="ext-expand">⤢</span>
+            </div>
+            <div class="ext-actions">
+              <button class="btn-primary">⊞ Open Web API Sidebar</button>
+              <button class="btn-secondary">T FetchXML Tester</button>
+              <button class="btn-ghost">⎘ Copy GUID</button>
+            </div>
+            <div class="ext-search">
+              <div class="search-inner">
+                <span class="s-icon">🔍</span>
+                <span class="s-placeholder">Search tables...</span>
+                <span class="s-count">1073</span>
+              </div>
+            </div>
+            <div class="ext-rows">
+              <div class="ext-row">
+                <div class="row-top"><span class="row-title">Microsoft Entra ID</span></div>
+                <div class="row-tags">
+                  <span class="tag tag-logical"><span class="tag-label">Logical</span>aaduser<span
+                      class="copy-icon">⎘</span></span>
+                  <span class="tag tag-schema"><span class="tag-label">Schema</span>aaduser<span
+                      class="copy-icon">⎘</span></span>
+                  <span class="tag tag-set"><span class="tag-label">Set</span>aadusers<span
+                      class="copy-icon">⎘</span></span>
+                </div>
+                <div class="row-actions">
+                  <button class="action-btn ab-fields">≡ View Fields</button>
+                  <button class="action-btn ab-webapi">&lt;/&gt; Web API</button>
+                  <button class="action-btn ab-maker">⎋ Maker</button>
+                </div>
+              </div>
+              <div class="ext-row">
+                <div class="row-top"><span class="row-title">Account</span></div>
+                <div class="row-tags">
+                  <span class="tag tag-logical"><span class="tag-label">Logical</span>account<span
+                      class="copy-icon">⎘</span></span>
+                  <span class="tag tag-schema"><span class="tag-label">Schema</span>Account<span
+                      class="copy-icon">⎘</span></span>
+                  <span class="tag tag-set"><span class="tag-label">Set</span>accounts<span
+                      class="copy-icon">⎘</span></span>
+                </div>
+                <div class="row-actions">
+                  <button class="action-btn ab-fields">≡ View Fields</button>
+                  <button class="action-btn ab-webapi">&lt;/&gt; Web API</button>
+                  <button class="action-btn ab-maker">⎋ Maker</button>
+                </div>
+              </div>
+              <div class="ext-row">
+                <div class="row-top"><span class="row-title">Contact</span></div>
+                <div class="row-tags">
+                  <span class="tag tag-logical"><span class="tag-label">Logical</span>contact<span
+                      class="copy-icon">⎘</span></span>
+                  <span class="tag tag-schema"><span class="tag-label">Schema</span>Contact<span
+                      class="copy-icon">⎘</span></span>
+                  <span class="tag tag-set"><span class="tag-label">Set</span>contacts<span
+                      class="copy-icon">⎘</span></span>
+                </div>
+                <div class="row-actions">
+                  <button class="action-btn ab-fields">≡ View Fields</button>
+                  <button class="action-btn ab-webapi">&lt;/&gt; Web API</button>
+                  <button class="action-btn ab-maker">⎋ Maker</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 03 FIELD INSPECTOR -->
+        <section class="doc-sec" id="fields">
+          <div class="sec-hd">
+            <div class="sec-icon si-pink">🔍</div>
+            <div class="sec-ht"><span class="chip">03 · Feature</span>
+              <h2>Field Inspector</h2>
+            </div>
+          </div>
+          <div class="feats">
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">All Column Metadata</div>
+                <div class="fdesc">View <strong>Display Names</strong>, <strong>Logical Names</strong>, <strong>Schema
+                    Names</strong> and <strong>Attribute Types</strong> — filterable by type and requirement level.
+                </div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">Requirement Badges</div>
+                <div class="fdesc">Instant visual distinction between Required, Recommended and Optional fields.</div>
+              </div>
+            </div>
+          </div>
+          <div class="pill-row">
+            <span class="rp rp-req">Required</span>
+            <span class="rp rp-rec">Recommended</span>
+            <span class="rp rp-opt">Optional</span>
+          </div>
+
+          <!-- LIVE UI COMPONENT: Field Inspector -->
+          <div class="ext-chrome">
+            <div class="ext-topbar">
+              <div class="ext-logo-icon">⚡</div>
+              <span class="ext-title">Dataverse</span>
+              <span class="ext-devtools-pill">DEVTOOLS</span>
+              <span class="ext-org">myorg.crm.dynamics.com</span>
+              <span class="ext-expand">⤢</span>
+            </div>
+            <div class="ext-actions">
+              <button class="btn-primary">⊞ Open Web API Sidebar</button>
+              <button class="btn-secondary">T FetchXML Tester</button>
+              <button class="btn-ghost">⎘ Copy GUID</button>
+            </div>
+            <div class="ext-search">
+              <div class="search-inner">
+                <span class="s-icon">🔍</span>
+                <span class="s-placeholder">Search account fields...</span>
+                <span class="s-count">281</span>
+              </div>
+            </div>
+            <div class="ext-breadcrumb">
+              <span class="bc-back">‹ Tables</span>
+              <span class="bc-sep">/</span>
+              <span class="bc-current">account</span>
+              <div class="bc-filters">
+                <select class="filter-select">
+                  <option>All fields</option>
+                </select>
+                <select class="filter-select">
+                  <option>All types</option>
+                </select>
+              </div>
+            </div>
+            <div class="ext-rows">
+              <div class="ext-row">
+                <div class="row-top">
+                  <span class="row-title">Account</span>
+                  <div style="display:flex;gap:6px;align-items:center">
+                    <span class="row-type-badge">Uniqueidentifier</span>
+                    <span class="row-type-badge required">REQUIRED</span>
+                  </div>
+                </div>
+                <div class="row-tags">
+                  <span class="tag tag-logical"><span class="tag-label">Logical</span>accountid<span
+                      class="copy-icon">⎘</span></span>
+                  <span class="tag tag-schema"><span class="tag-label">Schema</span>AccountId<span
+                      class="copy-icon">⎘</span></span>
+                </div>
+                <div class="row-actions"><button class="action-btn ab-openmaker">⎋ Open in Maker</button></div>
+              </div>
+              <div class="ext-row">
+                <div class="row-top">
+                  <span class="row-title">Account Name</span>
+                  <span class="row-type-badge">String</span>
+                </div>
+                <div class="row-tags">
+                  <span class="tag tag-logical"><span class="tag-label">Logical</span>name<span
+                      class="copy-icon">⎘</span></span>
+                  <span class="tag tag-schema"><span class="tag-label">Schema</span>Name<span
+                      class="copy-icon">⎘</span></span>
+                </div>
+                <div class="row-actions"><button class="action-btn ab-openmaker">⎋ Open in Maker</button></div>
+              </div>
+              <div class="ext-row">
+                <div class="row-top">
+                  <span class="row-title">Account Number</span>
+                  <span class="row-type-badge">String</span>
+                </div>
+                <div class="row-tags">
+                  <span class="tag tag-logical"><span class="tag-label">Logical</span>accountnumber<span
+                      class="copy-icon">⎘</span></span>
+                  <span class="tag tag-schema"><span class="tag-label">Schema</span>AccountNumber<span
+                      class="copy-icon">⎘</span></span>
+                </div>
+                <div class="row-actions"><button class="action-btn ab-openmaker">⎋ Open in Maker</button></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 04 MAKER PORTAL -->
+        <section class="doc-sec" id="maker">
+          <div class="sec-hd">
+            <div class="sec-icon si-maker">🔗</div>
+            <div class="sec-ht"><span class="chip">04 · Feature</span>
+              <h2>Smart Maker Portal Integration</h2>
+            </div>
+          </div>
+          <div class="feats">
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">Open in Maker</div>
+                <div class="fdesc">Jump directly to <code>make.powerapps.com</code> on any table or field — no URL
+                  construction needed.</div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">Solution Picker</div>
+                <div class="fdesc">Detects which <strong>unmanaged solutions</strong> contain your entity and highlights
+                  them automatically.</div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">Environment Detection</div>
+                <div class="fdesc">Auto-detects your Environment ID. If it fails, save it once and DevTools remembers
+                  it.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- LIVE UI COMPONENT: Maker Portal Modal -->
+          <div class="maker-modal-wrap">
+            <div class="modal-overlay-bg">
+              <div class="modal-box">
+                <div class="modal-header">
+                  <h3>Open in Maker Portal</h3>
+                  <span class="modal-close">✕</span>
+                </div>
+                <div class="modal-warn">
+                  <div class="warn-title">⚠ Environment ID not detected</div>
+                  <div class="warn-body">Find it in your <strong>make.powerapps.com</strong>
+                    URL:<br><code>environments/{this-part}/solutions/…</code></div>
+                </div>
+                <div class="modal-env-input">
+                  <input type="text" placeholder="Paste your Environment ID here…" readonly>
+                  <button class="btn-save">Save</button>
+                </div>
+                <div class="modal-sol-label">Select a solution containing <span>account</span>:</div>
+                <div class="contains-label">Contains This Entity</div>
+                <div class="sol-row">
+                  <div>
+                    <div class="sol-name">Sample Solution A</div>
+                    <div class="sol-meta">SampleSolutionA · v1.2.0</div>
+                  </div>
+                  <span class="sol-link">⤢</span>
+                </div>
+                <div class="sol-row">
+                  <div>
+                    <div class="sol-name">demo_rating</div>
+                    <div class="sol-meta">demo_rating · v1.0.1</div>
+                  </div>
+                  <span class="sol-link">⤢</span>
+                </div>
+                <div class="sol-row">
+                  <div>
+                    <div class="sol-name">Contoso Distance Calc</div>
+                    <div class="sol-meta">ContosoDistanceCalc · v1.1.2</div>
+                  </div>
+                  <span class="sol-link">⤢</span>
+                </div>
+                <div class="sol-row">
+                  <div>
+                    <div class="sol-name">Common Data Services Default</div>
+                    <div class="sol-meta">Ab12cd · v1.0.0</div>
+                  </div>
+                  <span class="sol-link">⤢</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 05 WEB API SIDEBAR -->
+        <section class="doc-sec" id="webapi">
+          <div class="sec-hd">
+            <div class="sec-icon si-purple">⚡</div>
+            <div class="sec-ht"><span class="chip">05 · Feature</span>
+              <h2>Web API Sidebar</h2>
+            </div>
+          </div>
+          <div class="feats">
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">OData Builder</div>
+                <div class="fdesc">Visually craft <code>$select</code>, <code>$filter</code>, <code>$expand</code> and
+                  <code>$orderby</code> with field-browse support.
+                </div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">FetchXML Tester</div>
+                <div class="fdesc">Write, run and inspect FetchXML with live formatted response and CSV / Excel export.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- LIVE UI COMPONENT: Web API Sidebar -->
+          <div class="webapi-shell">
+            <div class="webapi-header">
+              <div
+                style="width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--purple-dark),var(--purple));display:flex;align-items:center;justify-content:center;font-size:14px;">
+                ⚡</div>
+              <div>
+                <div class="wh-title">Dataverse DevTools</div>
+                <div class="wh-org">myorg.crm.dynamics.com</div>
+              </div>
+            </div>
+            <div class="webapi-chips">
+              <span class="entity-chip"><span class="dot"></span>demo_salesorder</span>
+              <span class="guid-chip">A1B2C3D4…</span>
+            </div>
+            <div class="webapi-tabs">
+              <div class="wtab active">&lt;/&gt; Web API</div>
+              <div class="wtab">★ Snippets</div>
+              <div class="wtab">⊕ Inspector</div>
+              <div class="wtab">⏱ History</div>
+              <div class="wtab">T FetchXML</div>
+            </div>
+            <div class="webapi-urlbar">
+              <select class="method-select">
+                <option>GET</option>
+              </select>
+              <div class="url-input">api/data/v9.2/demo_salesorders?$top=10/</div>
+              <button class="btn-send">▶ Send</button>
+            </div>
+            <div class="odata-body">
+              <div
+                style="font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;">
+                OData Builder</div>
+              <div class="odata-row">
+                <span class="odata-label">Entity Set</span>
+                <div class="odata-input" style="color:var(--text-dim)">Type to search entities</div>
+              </div>
+              <div class="odata-row">
+                <span class="odata-label">$select</span>
+                <div class="odata-input">name, demo_id, emailaddress1</div>
+              </div>
+              <div class="odata-row">
+                <span class="odata-label">$filter</span>
+                <div style="flex:1">
+                  <div class="odata-input" style="margin-bottom:6px">statecode eq 0</div>
+                  <div class="odata-tags">
+                    <span class="op-tag">eq</span><span class="op-tag">ne</span><span class="op-tag">gt</span><span
+                      class="op-tag">lt</span><span class="op-tag">ge</span><span class="op-tag">le</span><span
+                      class="op-tag">contains</span><span class="op-tag">startswith</span><span
+                      class="op-tag">and</span><span class="op-tag">or</span>
+                  </div>
+                </div>
+              </div>
+              <div class="odata-row">
+                <span class="odata-label">$top</span>
+                <div class="odata-input" style="max-width:60px">10</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 06 DEVELOPER UTILS -->
+        <section class="doc-sec" id="utils">
+          <div class="sec-hd">
+            <div class="sec-icon si-purple">🛠️</div>
+            <div class="sec-ht"><span class="chip">06 · Feature</span>
+              <h2>Essential Developer Utils</h2>
+            </div>
+          </div>
+          <div class="feats">
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">Copy Record GUID</div>
+                <div class="fdesc">One-click GUID extraction — replaces the old "Email a Link" workaround.</div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">Environment Chip</div>
+                <div class="fdesc">Shows current Org URL in the toolbar. Click to copy instantly.</div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">Live Attribute Inspector</div>
+                <div class="fdesc">Inspect all record attributes in real-time — type, value, dirty state and requirement
+                  flags at once.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- LIVE UI COMPONENT: Inspector Table -->
+          <div class="ext-chrome">
+            <div class="webapi-chips" style="background:#fff;border-bottom:1px solid var(--border);">
+              <span class="entity-chip"><span class="dot"></span>demo_salesorder</span>
+              <span class="guid-chip">A1B2C3D4…</span>
+            </div>
+            <div class="webapi-tabs">
+              <div class="wtab">&lt;/&gt; Web API</div>
+              <div class="wtab">★ Snippets</div>
+              <div class="wtab active">⊕ Inspector</div>
+              <div class="wtab">⏱ History</div>
+              <div class="wtab">T FetchXML</div>
+            </div>
+            <div
+              style="padding:8px 12px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+              <button class="btn-ghost" style="font-size:11px;padding:3px 9px">↺ Refresh</button>
+              <span style="font-family:var(--mono);font-size:10px;color:var(--text-dim)">demo_salesorder · 72
+                attributes</span>
+            </div>
+            <div style="overflow-x:auto">
+              <table class="inspector-table">
+                <thead>
+                  <tr>
+                    <th>Logical Name</th>
+                    <th>Type</th>
+                    <th>Value</th>
+                    <th>Dirty</th>
+                    <th>Req</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="col-name">demo_name</td>
+                    <td><span class="type-badge t-string">string</span></td>
+                    <td>SALE-0042</td>
+                    <td>—</td>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <td class="col-name">demo_individual</td>
+                    <td><span class="type-badge t-boolean">boolean</span></td>
+                    <td>false</td>
+                    <td>—</td>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <td class="col-name">demo_pricelist</td>
+                    <td><span class="type-badge t-lookup">lookup</span></td>
+                    <td>[{"entityType":"demo…</td>
+                    <td>—</td>
+                    <td><span class="req-star">★</span></td>
+                  </tr>
+                  <tr>
+                    <td class="col-name">demo_serviceaccount</td>
+                    <td><span class="type-badge t-lookup">lookup</span></td>
+                    <td>[{"entityType":"acc…</td>
+                    <td>—</td>
+                    <td><span class="req-star">★</span></td>
+                  </tr>
+                  <tr>
+                    <td class="col-name">demo_billinginterval</td>
+                    <td><span class="type-badge t-optionset">optionset</span></td>
+                    <td>783090000</td>
+                    <td>—</td>
+                    <td><span class="req-star">★</span></td>
+                  </tr>
+                  <tr>
+                    <td class="col-name">demo_applytaxcode</td>
+                    <td><span class="type-badge t-boolean">boolean</span></td>
+                    <td>false</td>
+                    <td>—</td>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <td class="col-name">demo_billingintv</td>
+                    <td><span class="type-badge t-integer">integer</span></td>
+                    <td>null</td>
+                    <td>—</td>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <td class="col-name">demo_detailedamount</td>
+                    <td><span class="type-badge t-money">money</span></td>
+                    <td>6600</td>
+                    <td>—</td>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <td class="col-name">demo_description</td>
+                    <td><span class="type-badge t-memo">memo</span></td>
+                    <td>null</td>
+                    <td>—</td>
+                    <td>—</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 07 PRO TIPS -->
+        <section class="doc-sec" id="tips">
+          <div class="sec-hd">
+            <div class="sec-icon si-warn">💡</div>
+            <div class="sec-ht"><span class="chip">07 · Tips</span>
+              <h2>Pro Tips</h2>
+            </div>
+          </div>
+          <div class="tips">
+            <div class="tip"><span class="tip-ico">⌨️</span>
+              <div>
+                <div class="tip-lbl">Search Shortcuts</div>
+                <p class="tip-txt">Use fragments like <code>account</code> or <code>av_</code> — no need to type the
+                  full name.</p>
+              </div>
+            </div>
+            <div class="tip"><span class="tip-ico">🌍</span>
+              <div>
+                <div class="tip-lbl">Environment ID</div>
+                <p class="tip-txt">If "Open in Maker" gives a 404, check the Environment ID in the Solution Picker. Find
+                  it in your Maker URL: <code>environments/<strong>{THIS-PART}</strong>/…</code></p>
+              </div>
+            </div>
+            <div class="tip"><span class="tip-ico">📋</span>
+              <div>
+                <div class="tip-lbl">Accurate Logical Names</div>
+                <p class="tip-txt">Use this extension while writing C# Plugins, JavaScript or Power Automate expressions
+                  — 100% accurate names, every time.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 08 PRIVACY -->
+        <section class="doc-sec" id="privacy">
+          <div class="sec-hd">
+            <div class="sec-icon si-green">🔒</div>
+            <div class="sec-ht"><span class="chip">08 · Security</span>
+              <h2>Permissions &amp; Privacy</h2>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--text-body);margin-bottom:4px">All logic runs locally in your browser.
+            Nothing is ever transmitted externally.</p>
+          <div class="priv-grid">
+            <div class="priv-card">
+              <div class="priv-chk">✓</div>
+              <p>Does <strong>not store</strong> your Dataverse data anywhere</p>
+            </div>
+            <div class="priv-card">
+              <div class="priv-chk">✓</div>
+              <p>Only accesses <code>*.dynamics.com</code> and <code>*.powerapps.com</code> tabs</p>
+            </div>
+            <div class="priv-card">
+              <div class="priv-chk">✓</div>
+              <p>All logic executes <strong>locally</strong> — nothing leaves your machine</p>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- /content -->
+
+      <!-- FOOTER -->
+      <footer class="footer">
+        <div class="footer-left">
+          <div class="footer-brand">Dataverse <span>DevTools</span></div>
+          <div class="footer-sub">Built by <a href="mailto:nehasahu2227@gmail.com">Neha Sahu</a> &nbsp;·&nbsp; <a
+              href="mailto:nehasahu2227@gmail.com">nehasahu2227@gmail.com</a> &nbsp;·&nbsp; v1.0.0</div>
+        </div>
+        <div class="footer-right">
+          <a href="https://chromewebstore.google.com/detail/dataverse-devtools/fjicdfidibeallngfadanabejjhnodoj"
+            target="_blank" class="footer-cws">🌐 Chrome Web Store</a>
+          <div class="footer-note">Happy Coding! 🚀</div>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+
+  <script>
+    const btn = document.getElementById('navBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    btn.addEventListener('click', () => sidebar.classList.toggle('open'));
+    overlay.addEventListener('click', () => sidebar.classList.remove('open'));
+
+    const secs = document.querySelectorAll('.doc-sec');
+    const links = document.querySelectorAll('.sb-link');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const a = document.querySelector(`.sb-link[href="#${e.target.id}"]`);
+          if (a) a.classList.add('active');
+        }
+      });
+    }, { threshold: 0.25, rootMargin: '-10% 0px -55% 0px' });
+    secs.forEach(s => obs.observe(s));
+    links.forEach(l => l.addEventListener('click', () => sidebar.classList.remove('open')));
+  </script>
+</body>
+
+</html>
