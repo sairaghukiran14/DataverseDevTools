@@ -1901,6 +1901,295 @@
         gap: 4px;
       }
     }
+
+    /* ════════════════════════════════
+   v1.1.0 ADDITIONS
+════════════════════════════════ */
+    /* NEW inline marker */
+    .new-pill {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 8.5px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+      padding: 1px 6px;
+      border-radius: 20px;
+      vertical-align: middle;
+      margin-left: 7px;
+    }
+
+    /* Context chip row in popup topbar */
+    .ctx-chips {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding: 8px 12px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ctx-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .ctx-chip:hover {
+      background: var(--pink-light);
+    }
+
+    .ctx-chip .ctx-k {
+      font-size: 8px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    /* Calc / Rollup mini badges */
+    .mini-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .mb-calc {
+      background: #eae3f7;
+      color: #6a32a8;
+      border: 1px solid #d4c4ec;
+    }
+
+    .mb-rollup {
+      background: #e0eef7;
+      color: #2a6a98;
+      border: 1px solid #c4ddec;
+    }
+
+    .mb-form {
+      background: #e6f5ec;
+      color: var(--contains-grn);
+      border: 1px solid #b8d8c8;
+    }
+
+    /* Expand chevron pill */
+    .expand-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: var(--purple-light);
+      color: var(--purple-mid);
+      border: 1px solid #d8c8e8;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    /* Expanded detail block (formula / option set) */
+    .row-detail {
+      margin-top: 10px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .row-detail .rd-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+
+    .formula-box {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--purple-mid);
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      line-height: 1.5;
+    }
+
+    /* Option set mini table */
+    .os-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      font-family: var(--mono);
+      font-size: 10.5px;
+    }
+
+    .os-table th {
+      background: var(--surface);
+      text-align: left;
+      padding: 5px 10px;
+      font-size: 8.5px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .os-table td {
+      padding: 5px 10px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .os-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .os-swatch {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      vertical-align: middle;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    /* Structured filter Builder pill + panel */
+    .builder-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 3px 9px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .builder-panel {
+      background: #fff;
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 8px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .builder-panel .bp-field {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 4px 9px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--text-muted);
+    }
+
+    /* What's New cards */
+    .whatsnew-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .wn-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--purple);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      transition: box-shadow 0.15s, transform 0.12s;
+    }
+
+    .wn-card:hover {
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+
+    .wn-card .wn-ico {
+      font-size: 18px;
+      margin-bottom: 7px;
+    }
+
+    .wn-card .wn-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 3px;
+    }
+
+    .wn-card .wn-area {
+      font-family: var(--mono);
+      font-size: 8.5px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--purple-mid);
+      margin-bottom: 6px;
+      display: inline-block;
+      background: var(--purple-light);
+      border: 1px solid #d8c8e8;
+      border-radius: 3px;
+      padding: 1px 6px;
+    }
+
+    .wn-card .wn-desc {
+      font-size: 12px;
+      color: var(--text-body);
+      line-height: 1.6;
+    }
+
+    .removed-note {
+      margin-top: 18px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    .removed-note strong {
+      color: var(--text-main);
+    }
+
+    @media (max-width: 680px) {
+      .whatsnew-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 
@@ -1926,6 +2215,8 @@
         </a>
       </div>
 
+      <div class="sb-section">Release</div>
+      <a href="#whatsnew" class="sb-link"><span class="ico">✨</span>What's New <span class="num">1.1</span></a>
       <div class="sb-section">Getting Started</div>
       <a href="#install" class="sb-link"><span class="ico">📥</span>Installation<span class="num">01</span></a>
       <div class="sb-section">Features</div>
@@ -1962,7 +2253,7 @@
             Dataverse, Dynamics 365 and Power Apps. Metadata, field inspection, Web API queries — right in your browser.
           </p>
           <div class="hero-pills">
-            <span class="hpill hi">v1.0.0 · March 2026</span>
+            <span class="hpill hi">v1.1.0 · May 2026</span>
             <span class="hpill">Chrome · Brave</span>
             <span class="hpill">Dynamics 365</span>
           </div>
@@ -1979,6 +2270,84 @@
       </div>
 
       <div class="content">
+
+        <!-- WHAT'S NEW IN 1.1.0 -->
+        <section class="doc-sec" id="whatsnew">
+          <div class="sec-hd">
+            <div class="sec-icon si-purple">✨</div>
+            <div class="sec-ht"><span class="chip">Release · 2026-05-25</span>
+              <h2>What's New in v1.1.0</h2>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--text-body);margin-bottom:4px">A big quality-of-life release — faster
+            metadata, deeper field insight, a structured Web&nbsp;API filter builder, and smarter environment
+            detection. The highlights:</p>
+          <div class="whatsnew-grid">
+            <div class="wn-card">
+              <div class="wn-ico">⚡</div>
+              <span class="wn-area">Popup</span>
+              <div class="wn-title">Per-Host Metadata Cache</div>
+              <div class="wn-desc">A 24-hour cache makes the second open near-instant, with a background refresh keeping
+                the next open fresh. Cold-path speed is unchanged.</div>
+            </div>
+            <div class="wn-card">
+              <div class="wn-ico">🧮</div>
+              <span class="wn-area">Field Inspector</span>
+              <div class="wn-title">Calculated, Rollup &amp; Formula Columns</div>
+              <div class="wn-desc">Rows now carry <strong>Calc</strong> / <strong>Rollup</strong> badges. Expand any row
+                to read the formula — rollup XAML is auto-parsed into a friendly summary.</div>
+            </div>
+            <div class="wn-card">
+              <div class="wn-ico">🎚️</div>
+              <span class="wn-area">Field Inspector</span>
+              <div class="wn-title">Option Set Value Tables</div>
+              <div class="wn-desc">Expand any picklist / state / status row to see a <code>Value · Label · swatch</code>
+                table, plus a new <strong>Global Option Sets</strong> browser on the home screen.</div>
+            </div>
+            <div class="wn-card">
+              <div class="wn-ico">📍</div>
+              <span class="wn-area">Popup</span>
+              <div class="wn-title">Context Chip Header</div>
+              <div class="wn-desc">A chip row shows <strong>Env · Tenant · Org · Record</strong> at a glance. Click any
+                chip to copy. Smarter Environment-ID auto-detect across more Xrm paths.</div>
+            </div>
+            <div class="wn-card">
+              <div class="wn-ico">⚙️</div>
+              <span class="wn-area">Web API Sidebar</span>
+              <div class="wn-title">Structured Filter Builder</div>
+              <div class="wn-desc">A new <code>⚙ Builder</code> pill builds <code>$filter</code> visually — field +
+                operator + value + and/or grouping, including <code>in</code>, <code>Today</code>,
+                <code>LastXDays</code>, <code>Between</code> and more.</div>
+            </div>
+            <div class="wn-card">
+              <div class="wn-ico">🔄</div>
+              <span class="wn-area">Web API Sidebar</span>
+              <div class="wn-title">Rewritten GET → FetchXML</div>
+              <div class="wn-desc">Lookups, nested <code>$expand</code> and filter trees now convert correctly. New
+                <strong>Format</strong> / <strong>Minify</strong> buttons, and <strong>OData</strong> emits a full URL.</div>
+            </div>
+            <div class="wn-card">
+              <div class="wn-ico">🧩</div>
+              <span class="wn-area">Web API Sidebar</span>
+              <div class="wn-title">Snippet Variables &amp; Generate Body</div>
+              <div class="wn-desc">Snippets substitute <code>{{orgUrl}}</code>, <code>{{envId}}</code>,
+                <code>{{recordId}}</code> and more at copy time. "Scaffold" is now
+                <strong>Generate&nbsp;request&nbsp;body</strong>, method-aware.</div>
+            </div>
+            <div class="wn-card">
+              <div class="wn-ico">🔬</div>
+              <span class="wn-area">Inspector</span>
+              <div class="wn-title">Metadata-Sourced Inspector</div>
+              <div class="wn-desc">Shows <strong>all</strong> attributes (not just form-bound), with a search box,
+                <strong>FORM</strong> / <strong>CALC</strong> / <strong>ROLLUP</strong> badges and live values.</div>
+            </div>
+          </div>
+          <div class="removed-note">
+            <strong>Also in this release:</strong> PATCH "Load current record" now works on first click · "Open in App"
+            launcher on every table card · responsive popup width. &nbsp;<strong>Removed:</strong> the Ribbon tab and the
+            manual tenant-entry prompt (auto-detect failures are now silent).
+          </div>
+        </section>
 
         <!-- 01 INSTALLATION -->
         <section class="doc-sec" id="install">
@@ -2036,6 +2405,30 @@
                   name goes straight to clipboard.</div>
               </div>
             </div>
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">Per-Host Metadata Cache <span class="new-pill">New</span></div>
+                <div class="fdesc">A <strong>24-hour cache</strong> per environment makes the second open near-instant.
+                  A background refresh keeps your next open fresh — the cold path is unchanged.</div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">Open in App <span class="new-pill">New</span></div>
+                <div class="fdesc">Every table card has an <strong>Open in App</strong> button — pick a model-driven app
+                  and an action (List view, New record, Advanced Find or Home) to jump straight there in a new tab.</div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">Global Option Sets Browser <span class="new-pill">New</span></div>
+                <div class="fdesc">A new <strong>Global Option Sets</strong> button on the home screen opens a searchable
+                  list of every global option set in the environment.</div>
+              </div>
+            </div>
           </div>
 
           <!-- LIVE UI COMPONENT: Metadata Browser -->
@@ -2044,13 +2437,20 @@
               <div class="ext-logo-icon">⚡</div>
               <span class="ext-title">Dataverse</span>
               <span class="ext-devtools-pill">DEVTOOLS</span>
-              <span class="ext-org">myorg.crm.dynamics.com</span>
               <span class="ext-expand">⤢</span>
+            </div>
+            <!-- Context chip header (new in 1.1.0) -->
+            <div class="ctx-chips">
+              <span class="ctx-chip"><span class="ctx-k">Env</span>Contoso (Prod)</span>
+              <span class="ctx-chip"><span class="ctx-k">Tenant</span>contoso.onmicrosoft.com</span>
+              <span class="ctx-chip"><span class="ctx-k">Org</span>myorg.crm.dynamics.com</span>
+              <span class="ctx-chip"><span class="ctx-k">Rec</span>A1B2C3D4…</span>
             </div>
             <div class="ext-actions">
               <button class="btn-primary">⊞ Open Web API Sidebar</button>
               <button class="btn-secondary">T FetchXML Tester</button>
               <button class="btn-ghost">⎘ Copy GUID</button>
+              <button class="btn-ghost">⊟ Global Option Sets</button>
             </div>
             <div class="ext-search">
               <div class="search-inner">
@@ -2074,6 +2474,7 @@
                   <button class="action-btn ab-fields">≡ View Fields</button>
                   <button class="action-btn ab-webapi">&lt;/&gt; Web API</button>
                   <button class="action-btn ab-maker">⎋ Maker</button>
+                  <button class="action-btn ab-openmaker">▦ Open in App</button>
                 </div>
               </div>
               <div class="ext-row">
@@ -2090,6 +2491,7 @@
                   <button class="action-btn ab-fields">≡ View Fields</button>
                   <button class="action-btn ab-webapi">&lt;/&gt; Web API</button>
                   <button class="action-btn ab-maker">⎋ Maker</button>
+                  <button class="action-btn ab-openmaker">▦ Open in App</button>
                 </div>
               </div>
               <div class="ext-row">
@@ -2106,6 +2508,7 @@
                   <button class="action-btn ab-fields">≡ View Fields</button>
                   <button class="action-btn ab-webapi">&lt;/&gt; Web API</button>
                   <button class="action-btn ab-maker">⎋ Maker</button>
+                  <button class="action-btn ab-openmaker">▦ Open in App</button>
                 </div>
               </div>
             </div>
@@ -2137,11 +2540,39 @@
                 <div class="fdesc">Instant visual distinction between Required, Recommended and Optional fields.</div>
               </div>
             </div>
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">Calculated, Rollup &amp; Formula Columns <span class="new-pill">New</span></div>
+                <div class="fdesc">Rows show <strong>Calc</strong> and <strong>Rollup</strong> badges. Expand a row to
+                  read the formula definition (mono, copyable). Rollup XAML is auto-parsed into a friendly summary —
+                  Aggregation, Property, Related entity and Inner FetchXML — with the raw XAML in a collapsible block.</div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">Option Set Value Tables <span class="new-pill">New</span></div>
+                <div class="fdesc">Expand any picklist, state, status or multi-select row to see a
+                  <code>Value · Label · swatch</code> table for the option set.</div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">Smarter Type Filters <span class="new-pill">New</span></div>
+                <div class="fdesc">The type-filter dropdown adds <code>⨐ Calculated</code>, <code>∑ Rollup</code> and
+                  <code>⨐∑ Calc + Rollup</code>, matching on <code>SourceType</code>. Expandable rows pulse to advertise
+                  the extra detail.</div>
+              </div>
+            </div>
           </div>
           <div class="pill-row">
             <span class="rp rp-req">Required</span>
             <span class="rp rp-rec">Recommended</span>
             <span class="rp rp-opt">Optional</span>
+            <span class="mini-badge mb-calc">⨐ Calc</span>
+            <span class="mini-badge mb-rollup">∑ Rollup</span>
           </div>
 
           <!-- LIVE UI COMPONENT: Field Inspector -->
@@ -2175,6 +2606,9 @@
                 </select>
                 <select class="filter-select">
                   <option>All types</option>
+                  <option>⨐ Calculated</option>
+                  <option>∑ Rollup</option>
+                  <option>⨐∑ Calc + Rollup</option>
                 </select>
               </div>
             </div>
@@ -2194,6 +2628,72 @@
                       class="copy-icon">⎘</span></span>
                 </div>
                 <div class="row-actions"><button class="action-btn ab-openmaker">⎋ Open in Maker</button></div>
+              </div>
+              <!-- Calculated column with expanded formula (new in 1.1.0) -->
+              <div class="ext-row" style="background:var(--surface2)">
+                <div class="row-top">
+                  <span class="row-title">Annual Revenue (Adj.)</span>
+                  <div style="display:flex;gap:6px;align-items:center">
+                    <span class="mini-badge mb-calc">⨐ Calc</span>
+                    <span class="row-type-badge">Money</span>
+                    <span class="expand-pill">⌄</span>
+                  </div>
+                </div>
+                <div class="row-tags">
+                  <span class="tag tag-logical"><span class="tag-label">Logical</span>demo_annualrevenueadj<span
+                      class="copy-icon">⎘</span></span>
+                  <span class="tag tag-schema"><span class="tag-label">Schema</span>demo_AnnualRevenueAdj<span
+                      class="copy-icon">⎘</span></span>
+                </div>
+                <div class="row-detail">
+                  <div class="rd-label">Calculated · Formula</div>
+                  <div class="formula-box">IF(statecode = 0, revenue * (1 + demo_adjustmentrate), revenue)</div>
+                </div>
+              </div>
+              <!-- Option set column with expanded value table (new in 1.1.0) -->
+              <div class="ext-row">
+                <div class="row-top">
+                  <span class="row-title">Relationship Type</span>
+                  <div style="display:flex;gap:6px;align-items:center">
+                    <span class="row-type-badge">Picklist</span>
+                    <span class="expand-pill">⌄</span>
+                  </div>
+                </div>
+                <div class="row-tags">
+                  <span class="tag tag-logical"><span class="tag-label">Logical</span>customertypecode<span
+                      class="copy-icon">⎘</span></span>
+                  <span class="tag tag-schema"><span class="tag-label">Schema</span>CustomerTypeCode<span
+                      class="copy-icon">⎘</span></span>
+                </div>
+                <div class="row-detail">
+                  <div class="rd-label">Option Set · Values</div>
+                  <table class="os-table">
+                    <thead>
+                      <tr>
+                        <th>Value</th>
+                        <th>Label</th>
+                        <th>Color</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>Competitor</td>
+                        <td><span class="os-swatch" style="background:#c5565d"></span></td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>Consultant</td>
+                        <td><span class="os-swatch" style="background:#c07848"></span></td>
+                      </tr>
+                      <tr>
+                        <td>3</td>
+                        <td>Customer</td>
+                        <td><span class="os-swatch" style="background:#2a7a4a"></span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
               <div class="ext-row">
                 <div class="row-top">
@@ -2253,9 +2753,10 @@
             <div class="feat">
               <div class="fdot"></div>
               <div>
-                <div class="ftitle">Environment Detection</div>
-                <div class="fdesc">Auto-detects your Environment ID. If it fails, save it once and DevTools remembers
-                  it.</div>
+                <div class="ftitle">Smarter Environment Detection <span class="new-pill">Improved</span></div>
+                <div class="fdesc">v1.1.0 widens auto-detection of your Environment ID — the maker-portal URL, more Xrm
+                  context paths (<code>bapEnvironmentId</code>, <code>userSettings.environmentId</code>), window globals
+                  and the token cache. If it still can't, save it once and DevTools remembers it.</div>
               </div>
             </div>
           </div>
@@ -2338,6 +2839,36 @@
                 </div>
               </div>
             </div>
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">Structured Filter Builder <span class="new-pill">New</span></div>
+                <div class="fdesc">The <code>⚙ Builder</code> pill opens an inline panel: pick <strong>field +
+                    operator + value</strong> with and/or connectors and optional grouping. Operators include
+                  <code>endswith</code>, <code>is null</code>, <code>in</code>, <code>Today</code>,
+                  <code>LastXDays</code>, <code>NextXDays</code> and <code>Between</code>. Free-text editing still works.</div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">Rewritten GET → FetchXML <span class="new-pill">New</span></div>
+                <div class="fdesc">Lookup <code>$select</code> strips <code>_…_value</code> correctly, nested
+                  <code>$expand</code> and filter trees convert properly, and date / <code>null</code> / <code>in</code>
+                  operators map to the right FetchXML. New <strong>Format</strong> &amp; <strong>Minify</strong> buttons,
+                  and <strong>OData</strong> now emits a full URL.</div>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="fdot"></div>
+              <div>
+                <div class="ftitle">Snippet Variables &amp; Generate Body <span class="new-pill">New</span></div>
+                <div class="fdesc">Snippets substitute <code>{{orgUrl}}</code>, <code>{{tenantId}}</code>,
+                  <code>{{envId}}</code>, <code>{{recordId}}</code>, <code>{{entitySetName}}</code> and more at copy
+                  time. <strong>Generate request body</strong> (formerly "Scaffold from fields") is method-aware — POST
+                  includes all writable fields; PATCH/PUT drop <code>statecode</code> / <code>statuscode</code>.</div>
+              </div>
+            </div>
           </div>
 
           <!-- LIVE UI COMPONENT: Web API Sidebar -->
@@ -2384,11 +2915,26 @@
               <div class="odata-row">
                 <span class="odata-label">$filter</span>
                 <div style="flex:1">
-                  <div class="odata-input" style="margin-bottom:6px">statecode eq 0</div>
-                  <div class="odata-tags">
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                    <div class="odata-input" style="flex:1;margin-bottom:0">statecode eq 0</div>
+                    <button class="builder-pill">⚙ Builder</button>
+                  </div>
+                  <!-- Structured filter builder panel (new in 1.1.0) -->
+                  <div class="builder-panel">
+                    <span class="bp-field">statecode</span>
+                    <span class="op-tag">eq</span>
+                    <span class="bp-field">0 · Active</span>
+                    <span class="op-tag">and</span>
+                    <span class="bp-field">createdon</span>
+                    <span class="op-tag">LastXDays</span>
+                    <span class="bp-field">30</span>
+                  </div>
+                  <div class="odata-tags" style="margin-top:6px">
                     <span class="op-tag">eq</span><span class="op-tag">ne</span><span class="op-tag">gt</span><span
                       class="op-tag">lt</span><span class="op-tag">ge</span><span class="op-tag">le</span><span
                       class="op-tag">contains</span><span class="op-tag">startswith</span><span
+                      class="op-tag">endswith</span><span class="op-tag">in</span><span class="op-tag">is null</span><span
+                      class="op-tag">Today</span><span class="op-tag">Between</span><span
                       class="op-tag">and</span><span class="op-tag">or</span>
                   </div>
                 </div>
@@ -2427,9 +2973,12 @@
             <div class="feat">
               <div class="fdot"></div>
               <div>
-                <div class="ftitle">Live Attribute Inspector</div>
-                <div class="fdesc">Inspect all record attributes in real-time — type, value, dirty state and requirement
-                  flags at once.</div>
+                <div class="ftitle">Live Attribute Inspector <span class="new-pill">Improved</span></div>
+                <div class="fdesc">Now sourced from <strong>metadata</strong> — it lists <strong>all</strong> attributes,
+                  not just form-bound ones. On-form rows are highlighted with a <strong>FORM</strong> badge, and
+                  <strong>CALC</strong> / <strong>ROLLUP</strong> / <strong>RO·C</strong> / <strong>RO·U</strong> badges
+                  appear inline. A new <strong>search box</strong> filters by logical name, type or badge, and
+                  <strong>Refresh</strong> cache-busts both metadata and the record body.</div>
               </div>
             </div>
           </div>
@@ -2448,8 +2997,12 @@
               <div class="wtab">T FetchXML</div>
             </div>
             <div
-              style="padding:8px 12px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+              style="padding:8px 12px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap">
               <button class="btn-ghost" style="font-size:11px;padding:3px 9px">↺ Refresh</button>
+              <div class="search-inner" style="flex:1;min-width:140px;padding:4px 10px">
+                <span class="s-icon">🔍</span>
+                <span class="s-placeholder">Filter by name, type or badge…</span>
+              </div>
               <span style="font-family:var(--mono);font-size:10px;color:var(--text-dim)">demo_salesorder · 72
                 attributes</span>
             </div>
@@ -2465,8 +3018,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td class="col-name">demo_name</td>
+                  <tr style="background:#f3fbf6">
+                    <td class="col-name">demo_name <span class="mini-badge mb-form"
+                        style="font-size:8px;padding:1px 5px">FORM</span></td>
                     <td><span class="type-badge t-string">string</span></td>
                     <td>SALE-0042</td>
                     <td>—</td>
@@ -2515,9 +3069,18 @@
                     <td>—</td>
                   </tr>
                   <tr>
-                    <td class="col-name">demo_detailedamount</td>
+                    <td class="col-name">demo_detailedamount <span class="mini-badge mb-calc"
+                        style="font-size:8px;padding:1px 5px">CALC</span></td>
                     <td><span class="type-badge t-money">money</span></td>
                     <td>6600</td>
+                    <td>—</td>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <td class="col-name">demo_totalorders <span class="mini-badge mb-rollup"
+                        style="font-size:8px;padding:1px 5px">ROLLUP</span></td>
+                    <td><span class="type-badge t-integer">integer</span></td>
+                    <td>14</td>
                     <td>—</td>
                     <td>—</td>
                   </tr>
@@ -2600,7 +3163,7 @@
         <div class="footer-left">
           <div class="footer-brand">Dataverse <span>DevTools</span></div>
           <div class="footer-sub">Built by <a href="mailto:nehasahu2227@gmail.com">Neha Sahu</a> &nbsp;·&nbsp; <a
-              href="mailto:nehasahu2227@gmail.com">nehasahu2227@gmail.com</a> &nbsp;·&nbsp; v1.0.0</div>
+              href="mailto:nehasahu2227@gmail.com">nehasahu2227@gmail.com</a> &nbsp;·&nbsp; v1.1.0</div>
         </div>
         <div class="footer-right">
           <a href="https://chromewebstore.google.com/detail/dataverse-devtools/fjicdfidibeallngfadanabejjhnodoj"
